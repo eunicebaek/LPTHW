@@ -1,45 +1,36 @@
-class Room(object):
 
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-        self.paths = {}
+class Lexicon(object):
+    def scan(self, userinput):
+        # First split up the input into a list of words
+        words = userinput.split()
+        output = []
+        # Next go through the list, for each word give it a label
+        #   from a list of words for each label
+        for item in words:
+            result = self.label(item) # return a nice tuple
+            output.append(result)
+        # Return a list of all of these labled words
+        return output
 
-    def go(self, direction):
-        return self.paths.get(direction, None)
+    def label(self, item):
+        # label the item and package it up in a tuple
+        if item in ['north', 'south', 'east']:
+            return ('direction', item)
+        elif item in ['go', 'kill', 'eat']:
+            return ('verb', item)
+        elif item in ['the', 'in ', 'of']:
+            return ('stop', item)
+        elif item in ['bear', 'princess']:
+            return ('noun', item)
+        else:
+            try:
+                number = int(item)
+                return ('number', number)
+            except ValueError:
+                    # What else could it be?
 
-    def add_paths(self, paths):
-        self.paths.update(paths)
+        # test if it's a number
 
-from nose.tools import*
-from ex47.game import Room
+        # test if it's a crap
 
-
-def test_room():
-    gold = Room("GoldRoom",
-                """This room has gold in it you can grab. There's a
-                door to the north.""")
-    assert_equal(gold.name, "GoldRoom")
-    assert_equal(gold.paths, {})
-
-def test_room_paths():
-    center = Room("Center", "Test room in the center.")
-    north = Room("North", "Test room in the north.")
-    south = Room("South", "Test room in the south.")
-
-    center.add_paths({'north': north, 'south': south})
-    assert_equal(center.go('north'), north)
-    assert_equal(center.go('south'), south)
-
-def test_map():
-    start = Room("Start", "You can go west and down a hole.")
-    west = Room("Trees", "There are trees here, you can go east.")
-    down = Room("Dungeon", "It's dark down here. You can go up.")
-
-    start.add_paths({'west': west, 'down': down})
-    west.add_paths({'east': start})
-    down.add_paths({'up': start})
-
-    assert_equal(start.go('west'), west)
-    assert_equal(start.go('west').go('east'), start)
-    assert_equal(start.go('down').go('up'), start)
+lexicon = Lexicon()
