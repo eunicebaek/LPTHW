@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+body {background-color: #DDDDDD}
+h1 { color: #FF0000;
+     font-family: Arial, Helvetica, sans-serif;
+     border:thin dotted #AA0000;
+   }
+p  { color: #0000FF;
+     font-family:"Times New Roman", Times, serif;
+     font-size: 20px;
+   }
+
+{% block content %}
+{% if scene %}
+  <h1> {{ scene.title }} </h1>
+  <pre>{{ scene.description }}</pre>
+  {% if scene.urlname == "death" %}
+    <p><a href="/">Play Again?</a></p>
+    {% else %}
+      <p>
+        <form action="/game" method="POST">
+          What do you do? <input type="text" name="userinput"> <input type="SUBMIT">
+        </form>
+      </p>
+      {% endif %}
+{% else %}
+  <p><a href="/">Start at the Beginning</a></p>
+{% endif %}
+{% endblock %}
